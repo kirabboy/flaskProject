@@ -1,13 +1,12 @@
 from distutils.command import register
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from flask import Flask, request, url_for, redirect, session
 from flask import render_template
 from flaskext.mysql import MySQL
 
 
 app = Flask(__name__)
-app.secret_key ='kiradeptrai'
+app.secret_key = 'kiradeptrai'
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -80,6 +79,46 @@ def logout():
    session.pop('username', None)
    return redirect(url_for('Index'))
 
+@app.route('/profile', methods=['GET'])
+def getProfile():
+    try:
+        _username = session['username']
+        sql0 = "select * from Users where userName = '{0}'".format(_username)
+        curs.execute(sql0)
+        rows = curs.fetchall()
+        if rows:
+            return render_template('profile.html', profiledata = rows)
+    except Exception as e:
+        raise (e)
+
+@app.route('/profile', methods=['POST'])
+def postProfile():
+    return render_template('profile.html')
+
+@app.route('/editprofile', methods=['GET'])
+def getEditProfile():
+    try:
+        _username = session['username']
+        sql0 = "select * from Users where userName = '{0}'".format(_username)
+        curs.execute(sql0)
+        rows = curs.fetchall()
+        if rows:
+            return render_template('editprofile.html', profiledata = rows)
+    except Exception as e:
+        raise (e)
+
+@app.route('/editprofile', methods=['POST'])
+def postEditProfile():
+    try:
+        _firstname = request.form.get('inputFirstname', None)
+        _lastname = request.form.get('inputLastname', None)
+        _email = request.form.get('inputEmail', None)
+        _phone = request.form.get('inputPhone',None)
+        sql0 = "update Users set firstName = '{0}', lastName = '{1}', email = '{2}', phone = '{3}'".format(_firstname, _lastname, _email, _phone)
+        curs.execute(sql0)
+        return redirect(url_for('getEditProfile'))
+    except Exception as e:
+        raise (e)
 
 if __name__ == '__main__':
     app.run()
