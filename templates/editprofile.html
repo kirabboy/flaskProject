@@ -97,7 +97,6 @@
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item active">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
           <span>Pages</span>
         </a>
         <div id="collapsePages" class="collapse show" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -298,12 +297,12 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Kira</span>
                 <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="/profile">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                   Profile
                 </a>
@@ -350,23 +349,26 @@
         <div class="card">
           <div class="card-body">
             <div class="e-profile">
+            {% for row in profiledata %}
+
               <div class="row">
                 <div class="col-12 col-sm-auto mb-3">
                   <div class="mx-auto" style="width: 140px;">
-                    <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
-                      <span style="color: rgb(166, 168, 170); font: bold 8pt Arial;">140x140</span>
-                    </div>
+                        {{ anh }}
                   </div>
                 </div>
                 <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
                   <div class="text-center text-sm-left mb-2 mb-sm-0">
-                    <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">John Smith</h4>
-                    <p class="mb-0">@johnny.s</p>
+                    <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{ row[2] }} {{ row[3] }}</h4>
+                    <p class="mb-0">@{{ row[1] }}</p>
                     <div class="mt-2">
-                      <button class="btn btn-primary" type="button">
-                        <i class="fa fa-fw fa-camera"></i>
-                        <span>Change Photo</span>
-                      </button>
+                        <form action="{{ url_for('changeAvatar') }}" method="post" enctype ="multipart/form-data">
+                            <input type="file" novalidate="" name="inputAvatar">
+                              <button class="btn btn-primary" type="submit">
+                                <i class="fa fa-fw fa-camera"></i>
+                                <span>Change Photo</span>
+                              </button>
+                        </form>
                     </div>
                   </div>
 
@@ -375,7 +377,6 @@
               <div class="tab-content pt-3">
                 <div class="tab-pane active">
                   <form class="form" novalidate="" action="{{ url_for('postEditProfile') }}" METHOD="post">
-                      {% for row in profiledata %}
                     <div class="row">
                       <div class="col">
                          <div class="row">
@@ -403,8 +404,28 @@
                         <div class="row">
                           <div class="col">
                             <div class="form-group">
+                              <label>Gender</label>
+                              <select class="form-control" type="text"  name="inputGender" value="{{row[4]}}">
+                                  <option value="Male">Male</option>
+                                  <option value="Female">Female</option>
+                                  <option value="Other">Other</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                              <label>Birthday</label>
+                              <input class="form-control" type="date" name="inputBirhday" value="{{row[5]}}">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group">
                               <label>Email</label>
-                              <input class="form-control" type="text" name="inputEmail" value="{{row[4]}}">
+                              <input class="form-control" type="text" name="inputEmail" value="{{row[6]}}">
                             </div>
                           </div>
                         </div>
@@ -412,81 +433,101 @@
                           <div class="col">
                             <div class="form-group">
                               <label>Phone</label>
-                              <input class="form-control" type="text" name="inputPhone" value="{{row[5]}}">
+                              <input class="form-control" type="number" name="inputPhone" value="{{ row[7] }}">
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col mb-3">
+                       <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                              <label>Address</label>
+                              <input class="form-control" type="text" name="inputAddress" value="{{ row[8] }}">
+                            </div>
+                          </div>
+                        </div>
+                          <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                              <label>Job</label>
+                              <input class="form-control" type="text" name="inputJob" value="{{ row[9] }}">
+                            </div>
+                          </div>
+                        </div>
+                          <div class="row">
+                          <div class="col">
                             <div class="form-group">
                               <label>About</label>
-                              <textarea class="form-control" rows="5" placeholder="KIRA"></textarea>
+                              <input class="form-control" type="text" name="inputAbout" value="{{ row[10] }}">
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-12 col-sm-6 mb-3">
-                        <div class="mb-2"><b>Change Password</b></div>
+                      <div class="col-12 col-sm-12 mb-3">
+                        <div class="mb-2"><b>Password area</b></div>
                         <div class="row">
                           <div class="col">
                             <div class="form-group">
-                              <label>Current Password</label>
-                              <input class="form-control" type="password" placeholder="••••••">
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col">
-                            <div class="form-group">
+                               <div>
+                                    <label>Change Password</label>
+
+                                   <input type="checkbox" name="inputChangePassword" id="changepassword" value="change">
+                               </div>
                               <label>New Password</label>
-                              <input class="form-control" type="password" placeholder="••••••">
+                              <input class="form-control" id="newpassword" name="inputNewPassword" type="password" placeholder="Enter new password">
                             </div>
                           </div>
                         </div>
                         <div class="row">
                           <div class="col">
                             <div class="form-group">
-                              <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
-                              <input class="form-control" type="password" placeholder="••••••"></div>
+                              <label>Confirm New <span class="d-none d-xl-inline">Password</span></label>
+                              <input class="form-control" id="confirmnewpassword" name="inputConfirmPassword" type="password" placeholder="Confirm password"></div>
                           </div>
                         </div>
-                      </div>
-                      <div class="col-12 col-sm-5 offset-sm-1 mb-3">
-                        <div class="mb-2"><b>Keeping in Touch</b></div>
                         <div class="row">
                           <div class="col">
-                            <label>Email Notifications</label>
-                            <div class="custom-controls-stacked px-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="notifications-blog" checked="">
-                                <label class="custom-control-label" for="notifications-blog">Blog posts</label>
-                              </div>
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="notifications-news" checked="">
-                                <label class="custom-control-label" for="notifications-news">Newsletter</label>
-                              </div>
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="notifications-offers" checked="">
-                                <label class="custom-control-label" for="notifications-offers">Personal Offers</label>
-                              </div>
+                            <div class="form-group">
+                              <label>Confirm Current Password</label>
+                              <input class="form-control" name="inputCurrentPassword" type="password" placeholder="Enter current password to save">
                             </div>
                           </div>
                         </div>
+                          <script type="text/javascript">
+                            function Validate() {
+                                var newpassword = document.getElementById("newpassword").value;
+                                var confirmPassword = document.getElementById("confirmnewpassword").value;
+                                if (document.getElementById("changepassword").checked){
+                                     if (newpassword != confirmPassword) {
+                                        alert("Passwords do not match.");
+                                        return false;
+                                    } else if (newpassword.length < 1) {
+                                        alert("Passwords is empty");
+                                        return false;
+
+                                    }
+                                }
+
+                                return true;
+                            }
+                          </script>
+
                       </div>
+
                     </div>
                     <div class="row">
                       <div class="col d-flex justify-content-end">
-                        <button class="btn btn-primary" type="submit">Save Changes</button>
+                        <button class="btn btn-primary" type="submit" onclick="return Validate()">Save Changes</button>
                       </div>
                     </div>
-                    {% endfor %}
                   </form>
 
                 </div>
               </div>
             </div>
+               {% endfor %}
+
           </div>
         </div>
       </div>
